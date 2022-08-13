@@ -5,7 +5,13 @@ from . import views
 app_name = 'users_app'
 
 urlpatterns = [
-    path('register/', views.UserRegisterCreateView.as_view(),
+    path('register/', views.UserRegisterFormView.as_view(),
     name = 'user-register'
+    ),
+    path('login/', views.LoginUser.as_view(),
+    name = 'user-login'
+    ),
+    path('logout/', views.LogoutView.as_view(),
+    name = 'user-logout'
     ),
 ]

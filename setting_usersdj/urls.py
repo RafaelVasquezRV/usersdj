@@ -20,4 +20,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # incluimos las urls de la app users
     re_path('', include('applications.users.urls')),
+    # incluimos las urls de la app home
+    re_path('', include('applications.home.urls')),
 ]

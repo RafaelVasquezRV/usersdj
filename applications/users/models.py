@@ -8,7 +8,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Model definition for User."""
     GENDER_CHOICES = (
         ('0', 'Masculino'),
-        ('1', 'Femenimo'),
+        ('1', 'Femenino'),
         ('2', 'Otros'),
     )
 
