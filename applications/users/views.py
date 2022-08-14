@@ -16,7 +16,8 @@ from django.views.generic.edit import FormView
 from .forms import (
     UserRegisterForm, 
     LoginForm,
-    UpdatePasswordForm
+    UpdatePasswordForm,
+    VerificationForm,
 )
 
 from .models import User
@@ -32,10 +33,10 @@ class UserRegisterFormView(FormView):
 
     def form_valid(self, form):
         
-        # Genemos el código
+        # Generamos el código
         codigo = code_generator()
 
-        User.objects.create_user(
+        usuario = User.objects.create_user(
             form.cleaned_data['username'],
             form.cleaned_data['email'],
             form.cleaned_data['password1'],
@@ -50,17 +51,18 @@ class UserRegisterFormView(FormView):
         email_remitente = 'neunapp.cursos@gmail.com'
 
         send_mail(asunto, mensaje, email_remitente, [form.cleaned_data['email'],])
+        
         # redirgir a pantalla de validación
-
-
         return HttpResponseRedirect(            
             reverse(
-                'users_app:user-login'
+                # 'users_app:user-login'
+                'users_app:user-verification',
+                kwargs={'pk': usuario.id}
             )
         )
 
 
-class LoginUser(FormView):
+class LoginUserFormView(FormView):
     template_name = 'users/login.html'
     form_class = LoginForm
     success_url = reverse_lazy('home_app:panel')
@@ -72,7 +74,7 @@ class LoginUser(FormView):
         )
         login(self.request, user)
 
-        return super(LoginUser, self).form_valid(form)
+        return super(LoginUserFormView, self).form_valid(form)
 
 
 class LogoutView(View):
@@ -107,3 +109,26 @@ class UpdatePasswordFormView(LoginRequiredMixin, FormView):
         logout(self.request)
         
         return super(UpdatePasswordFormView, self).form_valid(form)
+
+
+class CodeVerificationFormView(FormView):
+    template_name = 'users/verification.html'
+    form_class = VerificationForm
+    success_url = reverse_lazy('users_app:user-login')
+
+    def get_form_kwargs(self):
+        kwargs = super(CodeVerificationFormView, self).get_form_kwargs()
+        kwargs.update({
+            'pk': self.kwargs['pk']
+        })
+        return kwargs
+
+    def form_valid(self, form):
+        
+        User.objects.filter(
+            id=self.kwargs['pk']
+        ).update(
+            is_active=True
+        )
+
+        return super(CodeVerificationFormView, self).form_valid(form)
