@@ -111,4 +111,28 @@ class LoginForm(forms.Form):
         if not authenticate(username=username, password=password):
             raise forms.ValidationError('¡Los datos del usuario o contraseña no son correctos!')
         
-        return super(LoginForm, self).clean() 
+        return super(LoginForm, self).clean()
+
+class UpdatePasswordForm(forms.Form):
+    """UpdatePasswordForm definition."""
+
+    password1 = forms.CharField(
+        label='Contraseña',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Contraseña Actual'
+            }
+        )
+    )
+    
+    password2 = forms.CharField(
+        label='Contraseña',
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                'placeholder': 'Nueva Contraseña'
+            }
+        )
+    )
+ 

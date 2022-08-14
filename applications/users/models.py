@@ -19,8 +19,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     gender = models.CharField('Genero', max_length=1, choices=GENDER_CHOICES, blank=True)
     codregistro = models.CharField(max_length=6, blank=True)
 
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_staff = models.BooleanField('Acceso Admin', default=False)
+    is_active = models.BooleanField('Usuario Activo', default=False)
 
     
     USERNAME_FIELD = 'username'
